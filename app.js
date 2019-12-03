@@ -1,7 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+
 const sequelize = require('./util/database');
+
+const userRoutes = require('./routes/User');
+
+const User = require('./models/User');
 
 const port = process.env.PORT || 3000;
 
@@ -13,12 +19,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors);
 
-app.use((req, res, next) => {});
+app.use('/api/users', userRoutes);
 
-sequelize.sync().then(result => {
-  app.listen(port, () => {
-    console.log(
-      `Connection to database successful. Server is listening at port ${port}`
-    );
+sequelize
+  .sync({ force: false })
+  .then(result => {
+    return bcrypt.hash('12345', 10);
+  })
+  /* .then(result => {
+    return User.create({
+      username: 'shaanxd',
+      email: 'shaahid.xd@gmail.com',
+      password: result
+    });
+  }) */
+  .then(result => {
+    app.listen(port, () => {
+      console.log(
+        `Connection to database successful. Server is listening at port ${port}`
+      );
+    });
   });
-});
