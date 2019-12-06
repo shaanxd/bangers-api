@@ -21,22 +21,10 @@ app.use(cors);
 
 app.use('/api/users', userRoutes);
 
-sequelize
-  .sync({ force: false })
-  .then(result => {
-    return bcrypt.hash('12345', 10);
-  })
-  /* .then(result => {
-    return User.create({
-      username: 'shaanxd',
-      email: 'shaahid.xd@gmail.com',
-      password: result
-    });
-  }) */
-  .then(result => {
-    app.listen(port, () => {
-      console.log(
-        `Connection to database successful. Server is listening at port ${port}`
-      );
-    });
+sequelize.sync({ force: false }).then(result => {
+  app.listen(port, () => {
+    console.log(
+      `Connection to database successful. Server is listening at port ${port}`
+    );
   });
+});
