@@ -49,6 +49,10 @@ const login_user = (req, res, next) => {
                 message: 'Internal server error. Please try again.'
               });
             });
+        } else {
+          res.status(401).json({
+            message: 'Invalid username or password'
+          });
         }
       })
       .catch(err => {
