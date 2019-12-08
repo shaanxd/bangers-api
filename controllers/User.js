@@ -37,10 +37,7 @@ const login_user = async (req, res, next) => {
           }
         );
         res.status(200).json({
-          authToken: jwToken,
-          userId: foundUser.id,
-          userEmail: foundUser.email,
-          username: foundUser.username
+          authToken: jwToken
         });
       } else {
         res.status(401).json({
@@ -97,10 +94,7 @@ const signup_user = async (req, res, next) => {
       }
     );
     res.status(200).json({
-      authToken: jwToken,
-      userId: createdUser.id,
-      userEmail: createdUser.email,
-      username: createdUser.username
+      authToken: jwToken
     });
   } catch (err) {
     res.status(err.status || 500).json({
