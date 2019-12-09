@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 
+const { UserTypes } = require('../constants/UserTypes');
 const User = require('../models/User');
 
 const login_user = async (req, res, next) => {
@@ -29,7 +30,8 @@ const login_user = async (req, res, next) => {
           {
             id: foundUser.id,
             email: foundUser.email,
-            username: foundUser.username
+            username: foundUser.username,
+            userType: foundUser.UserType
           },
           process.env.JWT_KEY,
           {
@@ -37,7 +39,9 @@ const login_user = async (req, res, next) => {
           }
         );
         res.status(200).json({
-          authToken: jwToken
+          authToken: jwToken,
+          expiresInSeconds: 3600,
+          userType: foundUser.userType
         });
       } else {
         res.status(401).json({
@@ -58,10 +62,10 @@ const login_user = async (req, res, next) => {
 
 const signup_user = async (req, res, next) => {
   const {
-    body: { username, password, email }
+    body: { username, password, email, firstname, lastname }
   } = req;
   try {
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !firstname || !lastname) {
       return res.status(400).json({
         message: 'Bad Request'
       });
@@ -80,13 +84,17 @@ const signup_user = async (req, res, next) => {
     const createdUser = await User.create({
       username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      userType: UserTypes.CUSTOMER_USER,
+      firstname,
+      lastname
     });
     const jwToken = jwt.sign(
       {
         id: createdUser.id,
         email: createdUser.email,
-        username: createdUser.username
+        username: createdUser.username,
+        userType: createdUser.userType
       },
       process.env.JWT_KEY,
       {
@@ -94,7 +102,9 @@ const signup_user = async (req, res, next) => {
       }
     );
     res.status(200).json({
-      authToken: jwToken
+      authToken: jwToken,
+      expiresInSeconds: 3600,
+      userType: createdUser.userType
     });
   } catch (err) {
     res.status(err.status || 500).json({

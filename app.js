@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
+const { UserTypes } = require('./constants/UserTypes');
+
 const sequelize = require('./util/database');
 
 const userRoutes = require('./routes/User');
@@ -21,10 +23,23 @@ app.use(cors);
 
 app.use('/api/users', userRoutes);
 
-sequelize.sync({ force: false }).then(result => {
-  app.listen(port, () => {
-    console.log(
-      `Connection to database successful. Server is listening at port ${port}`
-    );
+sequelize
+  .sync({ force: false })
+  /* .then(result => bcrypt.hash('12345', 10))
+  .then(password =>
+    User.create({
+      username: 'shaanxd',
+      email: 'shaahid.xd@gmail.com',
+      password,
+      userType: UserTypes.ADMIN_USER,
+      firstname: 'Shahid',
+      lastname: 'Hassan'
+    })
+  ) */
+  .then(result => {
+    app.listen(port, () => {
+      console.log(
+        `Connection to database successful. Server is listening at port ${port}`
+      );
+    });
   });
-});

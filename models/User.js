@@ -8,6 +8,14 @@ const User = sequelize.define('user', {
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
+  firstname: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  lastname: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
   username: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -26,6 +34,10 @@ const User = sequelize.define('user', {
   isBlackListed: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  userType: {
+    type: Sequelize.STRING,
+    allowNull: false
   }
 });
 
