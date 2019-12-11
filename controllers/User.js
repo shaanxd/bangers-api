@@ -29,8 +29,6 @@ const login_user = async (req, res, next) => {
         const jwToken = jwt.sign(
           {
             id: foundUser.id,
-            email: foundUser.email,
-            username: foundUser.username,
             userType: foundUser.UserType
           },
           process.env.JWT_KEY,
@@ -92,8 +90,6 @@ const signup_user = async (req, res, next) => {
     const jwToken = jwt.sign(
       {
         id: createdUser.id,
-        email: createdUser.email,
-        username: createdUser.username,
         userType: createdUser.userType
       },
       process.env.JWT_KEY,
@@ -113,7 +109,29 @@ const signup_user = async (req, res, next) => {
   }
 };
 
+const google_auth = (req, res, next) => {
+  const {
+    user: { id, userType }
+  } = req;
+  const jwToken = jwt.sign(
+    {
+      id,
+      userType
+    },
+    process.env.JWT_KEY,
+    {
+      expiresIn: '1h'
+    }
+  );
+  res.status(200).json({
+    authToken: jwToken,
+    expiresInSeconds: 3600,
+    userType
+  });
+};
+
 module.exports = {
   login_user,
-  signup_user
+  signup_user,
+  google_auth
 };

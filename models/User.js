@@ -38,6 +38,9 @@ const User = sequelize.define('user', {
   userType: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  googleProvider: {
+    type: Sequelize.STRING
   }
 });
 
