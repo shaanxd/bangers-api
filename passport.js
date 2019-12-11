@@ -3,6 +3,7 @@ const GoogleTokenStrategy = require('passport-google-token').Strategy;
 const Sequelize = require('sequelize');
 const { randomPassword, digits } = require('secure-random-password');
 const bcrypt = require('bcrypt');
+const sendgridMail = require('@sendgrid/mail');
 
 const { UserTypes } = require('./constants/UserTypes');
 
@@ -57,6 +58,19 @@ passport.use(
             lastname,
             googleProvider
           });
+          sendgridMail
+            .send({
+              to: email,
+              from: 'no-reply@bangers.com',
+              subject: 'Signup successful!',
+              html: `<div><h1>Thank you for signing up with bangers<h1><p>Your password is ${generatedPassword}</div>`
+            })
+            .then(result => {
+              //  console.log(result);
+            })
+            .catch(err => {
+              //  console.log(err);
+            });
           return done(null, createdUser);
         }
         if (!user.googleProvider) {

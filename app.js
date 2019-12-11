@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const sendgridMail = require('@sendgrid/mail');
 
 const { UserTypes } = require('./constants/UserTypes');
 
@@ -17,6 +18,7 @@ const cors = require('./util/cors');
 
 const app = express();
 
+sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors);
