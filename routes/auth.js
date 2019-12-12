@@ -2,13 +2,13 @@ const express = require('express');
 const passport = require('passport');
 const passportConfig = require('../passport');
 
-const userController = require('../controllers/User');
+const authController = require('../controllers/auth');
 
 const router = express.Router();
 
-router.post('/login', userController.login_user);
+router.post('/login', authController.login_user);
 
-router.post('/signup', userController.signup_user);
+router.post('/signup', authController.signup_user);
 
 router.get(
   '/google',

@@ -1,9 +1,8 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 
 const { userTypes } = require('../constants/authTypes');
-const User = require('../models/User');
+const User = require('../models/users');
 const { generateJwToken, generateAuthRedirectUrl } = require('../util/auth');
 
 const login_user = async (req, res, next) => {

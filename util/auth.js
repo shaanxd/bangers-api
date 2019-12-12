@@ -22,7 +22,7 @@ const generateAuthRedirectUrl = (jwToken, userType) =>
   `${CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`;
 
 const generateAuthCallbackUrl = authType =>
-  `http://${APP_HOST}:${PORT}/api/users/${
+  `http://${APP_HOST}:${PORT}/api/auth/${
     authType === authTypes.GOOGLE_AUTH ? 'google' : 'facebook'
   }/callback`;
 

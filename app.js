@@ -5,25 +5,22 @@ const bcrypt = require('bcrypt');
 const sendgridMail = require('@sendgrid/mail');
 
 const { userTypes } = require('./constants/authTypes');
-
 const sequelize = require('./util/database');
-
-const userRoutes = require('./routes/User');
-
-const User = require('./models/User');
+const authRoutes = require('./routes/auth');
+const User = require('./models/users');
+const cors = require('./util/cors');
 
 const port = process.env.PORT || 3000;
-
-const cors = require('./util/cors');
 
 const app = express();
 
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors);
 
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 sequelize
   .sync({ force: false })

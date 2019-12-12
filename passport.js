@@ -11,7 +11,7 @@ const {
 } = require('./util/auth');
 const { authTypes, userTypes } = require('./constants/authTypes');
 
-const User = require('./models/User');
+const User = require('./models/users');
 
 const {
   GOOGLE_CLIENT_ID,
