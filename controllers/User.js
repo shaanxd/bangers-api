@@ -29,8 +29,6 @@ const login_user = async (req, res, next) => {
         const jwToken = jwt.sign(
           {
             id: foundUser.id,
-            email: foundUser.email,
-            username: foundUser.username,
             userType: foundUser.UserType
           },
           process.env.JWT_KEY,
@@ -92,8 +90,6 @@ const signup_user = async (req, res, next) => {
     const jwToken = jwt.sign(
       {
         id: createdUser.id,
-        email: createdUser.email,
-        username: createdUser.username,
         userType: createdUser.userType
       },
       process.env.JWT_KEY,
@@ -113,7 +109,47 @@ const signup_user = async (req, res, next) => {
   }
 };
 
+const auth_google = (req, res, next) => {
+  const {
+    user: { id, userType }
+  } = req;
+  const jwToken = jwt.sign(
+    {
+      id,
+      userType
+    },
+    process.env.JWT_KEY,
+    {
+      expiresIn: '1h'
+    }
+  );
+  res.redirect(
+    `${process.env.CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`
+  );
+};
+
+const auth_facebook = (req, res, next) => {
+  const {
+    user: { id, userType }
+  } = req;
+  const jwToken = jwt.sign(
+    {
+      id,
+      userType
+    },
+    process.env.JWT_KEY,
+    {
+      expiresIn: '1h'
+    }
+  );
+  res.redirect(
+    `${process.env.CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`
+  );
+};
+
 module.exports = {
   login_user,
-  signup_user
+  signup_user,
+  auth_google,
+  auth_facebook
 };
