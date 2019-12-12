@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 
 const { UserTypes } = require('../constants/UserTypes');
 const User = require('../models/User');
+const { generateJwToken, generateAuthRedirectUrl } = require('../util/auth');
 
 const login_user = async (req, res, next) => {
   const {
@@ -26,16 +27,7 @@ const login_user = async (req, res, next) => {
     if (foundUser) {
       const isValid = await bcrypt.compare(password, foundUser.password);
       if (isValid) {
-        const jwToken = jwt.sign(
-          {
-            id: foundUser.id,
-            userType: foundUser.UserType
-          },
-          process.env.JWT_KEY,
-          {
-            expiresIn: '1h'
-          }
-        );
+        const jwToken = generateJwToken(foundUser);
         res.status(200).json({
           authToken: jwToken,
           expiresInSeconds: 3600,
@@ -87,16 +79,7 @@ const signup_user = async (req, res, next) => {
       firstname,
       lastname
     });
-    const jwToken = jwt.sign(
-      {
-        id: createdUser.id,
-        userType: createdUser.userType
-      },
-      process.env.JWT_KEY,
-      {
-        expiresIn: '1h'
-      }
-    );
+    const jwToken = generateJwToken(createdUser);
     res.status(200).json({
       authToken: jwToken,
       expiresInSeconds: 3600,
@@ -110,41 +93,17 @@ const signup_user = async (req, res, next) => {
 };
 
 const auth_google = (req, res, next) => {
-  const {
-    user: { id, userType }
-  } = req;
-  const jwToken = jwt.sign(
-    {
-      id,
-      userType
-    },
-    process.env.JWT_KEY,
-    {
-      expiresIn: '1h'
-    }
-  );
-  res.redirect(
-    `${process.env.CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`
-  );
+  const { user } = req;
+  const jwToken = generateJwToken(user);
+  const redirectUrl = generateAuthRedirectUrl(jwToken, user.userType);
+  res.redirect(redirectUrl);
 };
 
 const auth_facebook = (req, res, next) => {
-  const {
-    user: { id, userType }
-  } = req;
-  const jwToken = jwt.sign(
-    {
-      id,
-      userType
-    },
-    process.env.JWT_KEY,
-    {
-      expiresIn: '1h'
-    }
-  );
-  res.redirect(
-    `${process.env.CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`
-  );
+  const { user } = req;
+  const jwToken = generateJwToken(user);
+  const redirectUrl = generateAuthRedirectUrl(jwToken, user.userType);
+  res.redirect(redirectUrl);
 };
 
 module.exports = {

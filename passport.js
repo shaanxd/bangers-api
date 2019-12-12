@@ -2,20 +2,31 @@ const passport = require('passport');
 const Sequelize = require('sequelize');
 const { randomPassword, digits } = require('secure-random-password');
 const bcrypt = require('bcrypt');
-const sendgridMail = require('@sendgrid/mail');
 const GoogleStrategy = require('passport-google-oauth20');
 const FacebookStrategy = require('passport-facebook');
-
-const { UserTypes } = require('./constants/UserTypes');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
+const {
+  generateAuthCallbackUrl,
+  sendSignupMailWithPassword
+} = require('./util/auth');
+const { authTypes, UserTypes } = require('./constants/UserTypes');
 
 const User = require('./models/User');
+
+const {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  FACEBOOK_CLIENT_ID,
+  FACEBOOK_CLIENT_SECRET,
+  JWT_KEY
+} = process.env;
 
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `http://${process.env.APP_HOST}:${process.env.PORT}/api/users/google/callback`
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: generateAuthCallbackUrl(authTypes.GOOGLE_AUTH)
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -59,19 +70,7 @@ passport.use(
             lastname,
             googleProvider
           });
-          sendgridMail
-            .send({
-              to: email,
-              from: 'no-reply@bangers.com',
-              subject: 'Signup successful!',
-              html: `<div><h1>Thank you for signing up with bangers<h1><p>Your password is ${generatedPassword}</div>`
-            })
-            .then(result => {
-              //  console.log(result);
-            })
-            .catch(err => {
-              //  console.log(err);
-            });
+          sendSignupMailWithPassword(email, generatedPassword);
           return done(null, createdUser);
         }
         if (!user.googleProvider) {
@@ -88,9 +87,9 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: `http://${process.env.APP_HOST}:${process.env.PORT}/api/users/facebook/callback`,
+      clientID: FACEBOOK_CLIENT_ID,
+      clientSecret: FACEBOOK_CLIENT_SECRET,
+      callbackURL: generateAuthCallbackUrl(authTypes.FACEBOOK_AUTH),
       profileFields: ['id', 'emails', 'name']
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -139,19 +138,7 @@ passport.use(
             facebookProvider
           });
           if (email) {
-            sendgridMail
-              .send({
-                to: email,
-                from: 'no-reply@bangers.com',
-                subject: 'Signup successful!',
-                html: `<div><h1>Thank you for signing up with bangers<h1><p>Your password is ${generatedPassword}</div>`
-              })
-              .then(result => {
-                //  console.log(result);
-              })
-              .catch(err => {
-                //  console.log(err);
-              });
+            sendSignupMailWithPassword(email, generatedPassword);
           }
           return done(null, createdUser);
         }
@@ -161,6 +148,26 @@ passport.use(
         done(null, user);
       } catch (err) {
         done(err, null);
+      }
+    }
+  )
+);
+
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: JWT_KEY
+    },
+    async (payload, done) => {
+      try {
+        const user = await User.findByPk(payload.id);
+        if (!user) {
+          return done(null, false);
+        }
+        done(null, user);
+      } catch (err) {
+        done(err, false);
       }
     }
   )
