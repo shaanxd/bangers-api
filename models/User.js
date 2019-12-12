@@ -41,6 +41,9 @@ const User = sequelize.define('user', {
   },
   googleProvider: {
     type: Sequelize.STRING
+  },
+  facebookProvider: {
+    type: Sequelize.STRING
   }
 });
 

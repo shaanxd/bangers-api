@@ -109,7 +109,7 @@ const signup_user = async (req, res, next) => {
   }
 };
 
-const google_auth = (req, res, next) => {
+const auth_google = (req, res, next) => {
   const {
     user: { id, userType }
   } = req;
@@ -123,15 +123,33 @@ const google_auth = (req, res, next) => {
       expiresIn: '1h'
     }
   );
-  res.status(200).json({
-    authToken: jwToken,
-    expiresInSeconds: 3600,
-    userType
-  });
+  res.redirect(
+    `${process.env.CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`
+  );
+};
+
+const auth_facebook = (req, res, next) => {
+  const {
+    user: { id, userType }
+  } = req;
+  const jwToken = jwt.sign(
+    {
+      id,
+      userType
+    },
+    process.env.JWT_KEY,
+    {
+      expiresIn: '1h'
+    }
+  );
+  res.redirect(
+    `${process.env.CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`
+  );
 };
 
 module.exports = {
   login_user,
   signup_user,
-  google_auth
+  auth_google,
+  auth_facebook
 };
