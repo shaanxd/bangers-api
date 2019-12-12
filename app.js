@@ -7,7 +7,7 @@ const sendgridMail = require('@sendgrid/mail');
 const { userTypes } = require('./constants/authTypes');
 const sequelize = require('./util/database');
 const authRoutes = require('./routes/auth');
-const User = require('./models/users');
+const User = require('./models/user');
 const cors = require('./util/cors');
 
 const port = process.env.PORT || 3000;
