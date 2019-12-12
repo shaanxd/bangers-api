@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const sendgridMail = require('@sendgrid/mail');
 
-const { UserTypes } = require('./constants/UserTypes');
+const { userTypes } = require('./constants/authTypes');
 
 const sequelize = require('./util/database');
 
@@ -33,7 +33,7 @@ sequelize
       username: 'shaanxd',
       email: 'shaahid.xd@gmail.com',
       password,
-      userType: UserTypes.ADMIN_USER,
+      userType: userTypes.ADMIN_USER,
       firstname: 'Shahid',
       lastname: 'Hassan'
     })

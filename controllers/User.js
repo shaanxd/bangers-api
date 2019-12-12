@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 
-const { UserTypes } = require('../constants/UserTypes');
+const { userTypes } = require('../constants/authTypes');
 const User = require('../models/User');
 const { generateJwToken, generateAuthRedirectUrl } = require('../util/auth');
 
@@ -75,7 +75,7 @@ const signup_user = async (req, res, next) => {
       username,
       email,
       password: hashedPassword,
-      userType: UserTypes.CUSTOMER_USER,
+      userType: userTypes.CUSTOMER_USER,
       firstname,
       lastname
     });

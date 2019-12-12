@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const sendgridMail = require('@sendgrid/mail');
 
-const { authTypes } = require('../constants/UserTypes');
+const { authTypes } = require('../constants/authTypes');
 
 const { JWT_KEY, APP_HOST, PORT, CLIENT_BASE_URL } = process.env;
 

@@ -9,7 +9,7 @@ const {
   generateAuthCallbackUrl,
   sendSignupMailWithPassword
 } = require('./util/auth');
-const { authTypes, UserTypes } = require('./constants/UserTypes');
+const { authTypes, userTypes } = require('./constants/authTypes');
 
 const User = require('./models/User');
 
@@ -65,7 +65,7 @@ passport.use(
             username,
             email,
             password: hashedPassword,
-            userType: UserTypes.CUSTOMER_USER,
+            userType: userTypes.CUSTOMER_USER,
             firstname,
             lastname,
             googleProvider
@@ -132,7 +132,7 @@ passport.use(
             username,
             email,
             password: hashedPassword,
-            userType: UserTypes.CUSTOMER_USER,
+            userType: userTypes.CUSTOMER_USER,
             firstname,
             lastname,
             facebookProvider

@@ -1,4 +1,4 @@
-const UserTypes = {
+const userTypes = {
   ADMIN_USER: 'ADMIN_USER',
   CUSTOMER_USER: 'CUSTOMER_USER'
 };
@@ -9,6 +9,6 @@ const authTypes = {
 };
 
 module.exports = {
-  UserTypes,
+  userTypes,
   authTypes
 };
