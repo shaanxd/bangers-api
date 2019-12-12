@@ -24,7 +24,7 @@ router.get(
     failureRedirect: '/login',
     session: false
   }),
-  userController.auth_google
+  authController.auth_google
 );
 
 router.get(
@@ -41,7 +41,7 @@ router.get(
     failureRedirect: '/login',
     session: false
   }),
-  userController.auth_facebook
+  authController.auth_facebook
 );
 
 module.exports = router;
