@@ -2,12 +2,12 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
 const sendgridMail = require('@sendgrid/mail');
 
 const { userTypes } = require('./constants/authTypes');
 const sequelize = require('./util/database');
 const authRoutes = require('./routes/auth');
+const vehicleRoutes = require('./routes/vehicles');
 const { User, Vehicle, VehicleType } = require('./models');
 const cors = require('./util/cors');
 
@@ -28,20 +28,10 @@ VehicleType.hasMany(Vehicle, {
 Vehicle.belongsTo(VehicleType);
 
 app.use('/api/auth', authRoutes);
+app.use('/api/vehicles', vehicleRoutes);
 
 sequelize
-  .sync({ force: false })
-  /* .then(result => bcrypt.hash('12345', 10))
-  .then(password =>
-    User.create({
-      username: 'shaanxd',
-      email: 'shaahid.xd@gmail.com',
-      password,
-      userType: userTypes.ADMIN_USER,
-      firstname: 'Shahid',
-      lastname: 'Hassan'
-    })
-  ) */
+  .sync()
   .then(result => {
     app.listen(port, () => {
       console.log(
