@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
 
 const { userTypes } = require('../constants/authTypes');
-const User = require('../models/user');
+const { User } = require('../models');
 const { generateJwToken, generateAuthRedirectUrl } = require('../util/auth');
 
 const login_user = async (req, res, next) => {
