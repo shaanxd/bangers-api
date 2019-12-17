@@ -159,7 +159,7 @@ passport.use(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: JWT_KEY
     },
-    async (payload, done) => {
+    async (req, payload, done) => {
       try {
         const user = await User.findByPk(payload.id);
         if (!user) {

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 
-const { User, Vehicle, VehicleType } = require('./models');
+const { User, Vehicle, VehicleType, Booking } = require('./models');
 const sequelize = require('./util/database');
 const vehicles = require('./data/vehicles.js');
 const { userTypes } = require('./constants/authTypes');
@@ -10,6 +10,8 @@ VehicleType.hasMany(Vehicle, {
   foreignKey: { name: 'vehicleTypeId', field: 'type' }
 });
 Vehicle.belongsTo(VehicleType);
+Booking.belongsTo(Vehicle);
+Booking.belongsTo(User);
 
 const seedVehicles = () => {
   return VehicleType.bulkCreate(vehicles, { include: [Vehicle] });
