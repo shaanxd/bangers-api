@@ -9,11 +9,11 @@ const Booking = sequelize.define('booking', {
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
-  bookingDate: {
+  startDate: {
     type: Sequelize.DATE,
     allowNull: false
   },
-  collectionDate: {
+  returnDate: {
     type: Sequelize.DATE,
     allowNull: false
   },
