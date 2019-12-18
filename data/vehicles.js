@@ -5,7 +5,7 @@ const vehicles = [
     pricePerDay: 40.0,
     vehicles: [
       {
-        name: 'Hyundai i10',
+        name: 'Nissan Micra',
         image: '/images/vehicles/hyundai-i10.png'
       },
       {
@@ -20,11 +20,11 @@ const vehicles = [
     pricePerDay: 55.0,
     vehicles: [
       {
-        name: 'Audi A3 Sportback',
+        name: 'Volvo V40 T4 Momentum',
         image: '/images/vehicles/hyundai-i10.png'
       },
       {
-        name: 'Honda Civic Hatchback',
+        name: 'VolksWagen Golf',
         image: '/images/vehicles/suzuki-ignis.png'
       }
     ]
@@ -35,7 +35,7 @@ const vehicles = [
     pricePerDay: 60.0,
     vehicles: [
       {
-        name: 'Toyota Camry Hybrid',
+        name: 'Peugeot 301',
         image: '/images/vehicles/hyundai-i10.png'
       },
       {
@@ -65,11 +65,11 @@ const vehicles = [
     pricePerDay: 40.0,
     vehicles: [
       {
-        name: 'Toyota Proace',
+        name: 'Toyota Sienna',
         image: '/images/vehicles/hyundai-i10.png'
       },
       {
-        name: 'Renault Trafic',
+        name: 'Hyundai iMax',
         image: '/images/vehicles/suzuki-ignis.png'
       }
     ]

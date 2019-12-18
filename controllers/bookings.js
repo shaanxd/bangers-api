@@ -23,26 +23,30 @@ const create_booking = async (req, res, next) => {
       where: {
         [Sequelize.Op.and]: {
           startDate: {
-            [Sequelize.Op.gte]: new Date(startDate)
+            [Sequelize.Op.lte]: new Date(returnDate)
           },
           returnDate: {
-            [Sequelize.Op.lte]: new Date(returnDate)
-          }
+            [Sequelize.Op.gte]: new Date(startDate)
+          },
+          vehicleId
         }
       }
     });
-    console.log(foundBooking);
-    const createdBooking = Booking.create({
+    if (foundBooking.length !== 0) {
+      return res.status(400).json({
+        message: 'Vehicle booked during selected date.'
+      });
+    }
+    const booking = await Booking.create({
       startDate,
       returnDate,
       userId,
       vehicleId
     });
     res.status(200).json({
-      message: 'ahaha'
+      message: 'Vehicle booked successfully.'
     });
   } catch (err) {
-    console.log(err.message);
     res.status(err.status || 500).json({
       message: err.message || 'Internal server error. Please try again.'
     });
