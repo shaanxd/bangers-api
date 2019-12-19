@@ -13,7 +13,9 @@ const get_vehicles = async (req, res, next) => {
         }
       : {};
     const vehicles = await Vehicle.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt', 'vehicleTypeId'] },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'vehicleTypeId', 'images']
+      },
       include: [
         {
           model: VehicleType,
@@ -51,21 +53,7 @@ const get_vehicle = async (req, res, next) => {
         message: 'Vehicle not found'
       });
     }
-    const {
-      id: vehicleId,
-      name,
-      image,
-      vehicleType: { id: typeId, type, pricePerDay, numberOfSeats }
-    } = vehicle;
-    res.status(200).json({
-      id: vehicleId,
-      name,
-      image,
-      typeId,
-      type,
-      pricePerDay,
-      numberOfSeats
-    });
+    res.status(200).json(vehicle);
   } catch (err) {
     res.status(err.status || 500).json({
       message: err.message || 'Internal server error. Please try again.'

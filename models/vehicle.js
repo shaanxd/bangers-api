@@ -12,9 +12,19 @@ const Vehicle = sequelize.define('vehicle', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  image: {
+  defaultImage: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  images: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    set(images) {
+      this.setDataValue('images', images.join('?'));
+    },
+    get() {
+      return this.getDataValue('images').split('?');
+    }
   }
 });
 

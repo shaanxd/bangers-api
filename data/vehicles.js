@@ -6,11 +6,27 @@ const vehicles = [
     vehicles: [
       {
         name: 'Nissan Micra',
-        image: '/images/vehicles/hyundai-i10.png'
+        defaultImage: '/images/vehicles/nissan-micra-1.jpg',
+        images: [
+          '/images/vehicles/nissan-micra-1.jpg',
+          '/images/vehicles/nissan-micra-2.jpg',
+          '/images/vehicles/nissan-micra-3.jpg',
+          '/images/vehicles/nissan-micra-4.jpg',
+          '/images/vehicles/nissan-micra-5.jpg',
+          '/images/vehicles/nissan-micra-6.jpg'
+        ]
       },
       {
-        name: 'Suzuki Ignis',
-        image: '/images/vehicles/suzuki-ignis.png'
+        name: 'Fiat Punto Evo',
+        defaultImage: '/images/vehicles/fiat-punto-1.jpg',
+        images: [
+          '/images/vehicles/fiat-punto-1.jpg',
+          '/images/vehicles/fiat-punto-2.jpg',
+          '/images/vehicles/fiat-punto-3.jpg',
+          '/images/vehicles/fiat-punto-4.jpg',
+          '/images/vehicles/fiat-punto-5.jpg',
+          '/images/vehicles/fiat-punto-6.jpg'
+        ]
       }
     ]
   },
@@ -20,12 +36,28 @@ const vehicles = [
     pricePerDay: 55.0,
     vehicles: [
       {
-        name: 'Volvo V40 T4 Momentum',
-        image: '/images/vehicles/hyundai-i10.png'
+        name: 'Kia Soul',
+        defaultImage: '/images/vehicles/kia-soul-1.jpg',
+        images: [
+          '/images/vehicles/kia-soul-1.jpg',
+          '/images/vehicles/kia-soul-2.jpg',
+          '/images/vehicles/kia-soul-3.jpg',
+          '/images/vehicles/kia-soul-4.jpg',
+          '/images/vehicles/kia-soul-5.jpg',
+          '/images/vehicles/kia-soul-6.jpg'
+        ]
       },
       {
-        name: 'VolksWagen Golf',
-        image: '/images/vehicles/suzuki-ignis.png'
+        name: 'Suzuki Ignis',
+        defaultImage: '/images/vehicles/suzuki-ignis-1.jpg',
+        images: [
+          '/images/vehicles/suzuki-ignis-1.jpg',
+          '/images/vehicles/suzuki-ignis-2.jpg',
+          '/images/vehicles/suzuki-ignis-3.jpg',
+          '/images/vehicles/suzuki-ignis-4.jpg',
+          '/images/vehicles/suzuki-ignis-5.jpg',
+          '/images/vehicles/suzuki-ignis-6.jpg'
+        ]
       }
     ]
   },
@@ -36,11 +68,27 @@ const vehicles = [
     vehicles: [
       {
         name: 'Peugeot 301',
-        image: '/images/vehicles/hyundai-i10.png'
+        defaultImage: '/images/vehicles/peugeot-301-1.jpg',
+        images: [
+          '/images/vehicles/peugeot-301-1.jpg',
+          '/images/vehicles/peugeot-301-2.jpg',
+          '/images/vehicles/peugeot-301-3.jpg',
+          '/images/vehicles/peugeot-301-4.jpg',
+          '/images/vehicles/peugeot-301-5.jpg',
+          '/images/vehicles/peugeot-301-6.jpg'
+        ]
       },
       {
         name: 'Toyota Corolla',
-        image: '/images/vehicles/suzuki-ignis.png'
+        defaultImage: '/images/vehicles/toyota-corolla-1.jpg',
+        images: [
+          '/images/vehicles/toyota-corolla-1.jpg',
+          '/images/vehicles/toyota-corolla-2.jpg',
+          '/images/vehicles/toyota-corolla-3.jpg',
+          '/images/vehicles/toyota-corolla-4.jpg',
+          '/images/vehicles/toyota-corolla-5.jpg',
+          '/images/vehicles/toyota-corolla-6.jpg'
+        ]
       }
     ]
   },
@@ -50,12 +98,28 @@ const vehicles = [
     pricePerDay: 75.0,
     vehicles: [
       {
-        name: 'Mazda 6 Tourer',
-        image: '/images/vehicles/hyundai-i10.png'
+        name: 'Volvo V40 T4 Momentum',
+        defaultImage: '/images/vehicles/volvo-v40-1.jpg',
+        images: [
+          '/images/vehicles/volvo-v40-1.jpg',
+          '/images/vehicles/volvo-v40-2.jpg',
+          '/images/vehicles/volvo-v40-3.jpg',
+          '/images/vehicles/volvo-v40-4.jpg',
+          '/images/vehicles/volvo-v40-5.jpg',
+          '/images/vehicles/volvo-v40-6.jpg'
+        ]
       },
       {
-        name: 'Audi A4 Avant',
-        image: '/images/vehicles/suzuki-ignis.png'
+        name: 'VolksWagen Golf',
+        defaultImage: '/images/vehicles/volkswagen-golf-1.jpg',
+        images: [
+          '/images/vehicles/volkswagen-golf-1.jpg',
+          '/images/vehicles/volkswagen-golf-2.jpg',
+          '/images/vehicles/volkswagen-golf-3.jpg',
+          '/images/vehicles/volkswagen-golf-4.jpg',
+          '/images/vehicles/volkswagen-golf-5.jpg',
+          '/images/vehicles/volkswagen-golf-6.jpg'
+        ]
       }
     ]
   },
@@ -66,11 +130,27 @@ const vehicles = [
     vehicles: [
       {
         name: 'Toyota Sienna',
-        image: '/images/vehicles/hyundai-i10.png'
+        defaultImage: '/images/vehicles/toyota-sienna-1.jpg',
+        images: [
+          '/images/vehicles/toyota-sienna-1.jpg',
+          '/images/vehicles/toyota-sienna-2.jpg',
+          '/images/vehicles/toyota-sienna-3.jpg',
+          '/images/vehicles/toyota-sienna-4.jpg',
+          '/images/vehicles/toyota-sienna-5.jpg',
+          '/images/vehicles/toyota-sienna-6.jpg'
+        ]
       },
       {
         name: 'Hyundai iMax',
-        image: '/images/vehicles/suzuki-ignis.png'
+        defaultImage: '/images/vehicles/suzuki-ignis.png',
+        images: [
+          '/images/vehicles/hyundai-imax-1.jpg',
+          '/images/vehicles/hyundai-imax-2.jpg',
+          '/images/vehicles/hyundai-imax-3.jpg',
+          '/images/vehicles/hyundai-imax-4.jpg',
+          '/images/vehicles/hyundai-imax-5.jpg',
+          '/images/vehicles/hyundai-imax-6.jpg'
+        ]
       }
     ]
   }
