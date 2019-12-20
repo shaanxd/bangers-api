@@ -1,9 +1,17 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 
-const { User, Vehicle, VehicleType, Booking } = require('./models');
+const {
+  User,
+  Vehicle,
+  VehicleType,
+  Booking,
+  BookedEquipment,
+  Equipment
+} = require('./models');
 const sequelize = require('./util/database');
-const vehicles = require('./data/vehicles.js');
+const vehicles = require('./data/vehicles');
+const equipment = require('./data/equipment');
 const { userTypes } = require('./constants/authTypes');
 
 VehicleType.hasMany(Vehicle, {
@@ -12,9 +20,15 @@ VehicleType.hasMany(Vehicle, {
 Vehicle.belongsTo(VehicleType);
 Booking.belongsTo(Vehicle);
 Booking.belongsTo(User);
+Equipment.belongsToMany(Booking, { through: BookedEquipment });
+Booking.belongsToMany(Equipment, { through: BookedEquipment });
 
 const seedVehicles = () => {
   return VehicleType.bulkCreate(vehicles, { include: [Vehicle] });
+};
+
+const seedEquipment = () => {
+  return Equipment.bulkCreate(equipment);
 };
 
 const seedUsers = password => {
@@ -44,6 +58,11 @@ sequelize
   })
   .then(result => {
     console.log('Bulk creating users complete.');
+    console.log('Bulk creating equipment');
+    return seedEquipment();
+  })
+  .then(result => {
+    console.log('Bulk creating equipment complete');
   })
   .catch(err => {
     console.log(err.message);
