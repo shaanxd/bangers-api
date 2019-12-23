@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const { Booking, Vehicle, User } = require('../models');
+const { Booking, Vehicle, User, Equipment } = require('../models');
 
 const create_booking = async (req, res, next) => {
   try {
@@ -53,6 +53,22 @@ const create_booking = async (req, res, next) => {
   }
 };
 
+const get_equipment = async (req, res, next) => {
+  try {
+    const equipment = await Equipment.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    });
+    res.status(200).json(equipment);
+  } catch (err) {
+    res.status(err.status || 500).json({
+      message: err.message || 'Internal server error. Please try again.'
+    });
+  }
+};
+
 module.exports = {
-  create_booking
+  create_booking,
+  get_equipment
 };

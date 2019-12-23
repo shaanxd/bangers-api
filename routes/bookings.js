@@ -12,4 +12,6 @@ router.post(
   bookingController.create_booking
 );
 
+router.get('/equipment', bookingController.get_equipment);
+
 module.exports = router;

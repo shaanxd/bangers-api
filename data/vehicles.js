@@ -142,7 +142,7 @@ const vehicles = [
       },
       {
         name: 'Hyundai iMax',
-        defaultImage: '/images/vehicles/suzuki-ignis.png',
+        defaultImage: '/images/vehicles/hyundai-imax-1.jpg',
         images: [
           '/images/vehicles/hyundai-imax-1.jpg',
           '/images/vehicles/hyundai-imax-2.jpg',
