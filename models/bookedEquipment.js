@@ -2,6 +2,6 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
 
-const BookEquipment = sequelize.define('bookEquipment', {});
+const BookedEquipment = sequelize.define('bookedEquipment', {});
 
-module.exports = BookEquipment;
+module.exports = BookedEquipment;
