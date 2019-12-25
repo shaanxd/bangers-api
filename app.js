@@ -9,7 +9,14 @@ const sequelize = require('./util/database');
 const authRoutes = require('./routes/auth');
 const vehicleRoutes = require('./routes/vehicles');
 const bookingRoutes = require('./routes/bookings');
-const { User, Vehicle, VehicleType, Booking } = require('./models');
+const {
+  User,
+  Vehicle,
+  VehicleType,
+  Booking,
+  Equipment,
+  BookedEquipment
+} = require('./models');
 const cors = require('./util/cors');
 
 const port = process.env.PORT || 3000;
@@ -29,6 +36,14 @@ VehicleType.hasMany(Vehicle, {
 Vehicle.belongsTo(VehicleType);
 Booking.belongsTo(Vehicle);
 Booking.belongsTo(User);
+Equipment.belongsToMany(Booking, {
+  through: BookedEquipment,
+  foreignKey: 'equipment'
+});
+Booking.belongsToMany(Equipment, {
+  through: BookedEquipment,
+  foreignKey: 'booking'
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);

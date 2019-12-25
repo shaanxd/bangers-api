@@ -20,8 +20,14 @@ VehicleType.hasMany(Vehicle, {
 Vehicle.belongsTo(VehicleType);
 Booking.belongsTo(Vehicle);
 Booking.belongsTo(User);
-Equipment.belongsToMany(Booking, { through: BookedEquipment });
-Booking.belongsToMany(Equipment, { through: BookedEquipment });
+Equipment.belongsToMany(Booking, {
+  through: BookedEquipment,
+  foreignKey: 'equipment'
+});
+Booking.belongsToMany(Equipment, {
+  through: BookedEquipment,
+  foreignKey: 'booking'
+});
 
 const seedVehicles = () => {
   return VehicleType.bulkCreate(vehicles, { include: [Vehicle] });

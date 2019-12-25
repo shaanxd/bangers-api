@@ -1,12 +1,18 @@
 const Sequelize = require('sequelize');
 
-const { Booking, Vehicle, User, Equipment } = require('../models');
+const {
+  Booking,
+  Vehicle,
+  User,
+  Equipment,
+  BookedEquipment
+} = require('../models');
 
 const create_booking = async (req, res, next) => {
   try {
     const {
       user: { id: userId },
-      body: { startDate, returnDate, vehicleId }
+      body: { startDate, returnDate, vehicleId, equipment }
     } = req;
     if (!startDate || !returnDate || !vehicleId) {
       return res.status(401).json({
@@ -37,12 +43,38 @@ const create_booking = async (req, res, next) => {
         message: 'Vehicle booked during selected date.'
       });
     }
+    const equipmentBooked = await Booking.findAll({
+      where: {
+        [Sequelize.Op.and]: {
+          startDate: {
+            [Sequelize.Op.lte]: new Date(returnDate)
+          },
+          returnDate: {
+            [Sequelize.Op.gte]: new Date(startDate)
+          }
+        }
+      },
+      include: [
+        {
+          model: Equipment,
+          where: {
+            id: equipment
+          }
+        }
+      ]
+    });
+    if (equipmentBooked.length > 0) {
+      return res.status(400).json({
+        message: `${equipmentBooked[0].equipment[0].name} is unavailable on selected date.`
+      });
+    }
     const booking = await Booking.create({
       startDate,
       returnDate,
       userId,
       vehicleId
     });
+    const bookedEquipments = await booking.addEquipment(equipment);
     res.status(200).json({
       message: 'Vehicle booked successfully.'
     });
