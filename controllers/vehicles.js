@@ -61,7 +61,19 @@ const get_vehicle = async (req, res, next) => {
   }
 };
 
+const get_vehicle_types = async (req, res, next) => {
+  try {
+    const vehicleTypes = await VehicleType.findAll();
+    res.status(200).json(vehicleTypes);
+  } catch (err) {
+    res.status(err.status || 500).json({
+      message: err.message || 'Internal server error. Please try again.'
+    });
+  }
+};
+
 module.exports = {
   get_vehicle,
-  get_vehicles
+  get_vehicles,
+  get_vehicle_types
 };
