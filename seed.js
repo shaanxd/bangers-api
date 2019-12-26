@@ -39,7 +39,6 @@ const seedEquipment = () => {
 
 const seedUsers = password => {
   return User.create({
-    username: 'shaanxd',
     email: 'shaahid.xd@gmail.com',
     password,
     userType: userTypes.ADMIN_USER,

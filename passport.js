@@ -44,25 +44,12 @@ passport.use(
           }
         });
         if (!user) {
-          let username = `${firstname}${lastname}`.toLowerCase();
           const generatedPassword = randomPassword({
             length: 5,
             characters: digits
           });
-          const isUsernameFound = await User.findOne({
-            where: {
-              username
-            }
-          });
-          if (isUsernameFound) {
-            username = `${username}${randomPassword({
-              length: 4,
-              characters: digits
-            })}`;
-          }
           const hashedPassword = await bcrypt.hash(generatedPassword, 10);
           const createdUser = await User.create({
-            username,
             email,
             password: hashedPassword,
             userType: userTypes.CUSTOMER_USER,
@@ -109,27 +96,12 @@ passport.use(
           }
         });
         if (!user) {
-          let username = facebookUsername
-            ? facebookUsername
-            : `${firstname}${lastname}`.toLowerCase();
           const generatedPassword = randomPassword({
             length: 5,
             characters: digits
           });
-          const isUsernameFound = await User.findOne({
-            where: {
-              username
-            }
-          });
-          if (isUsernameFound) {
-            username = `${username}${randomPassword({
-              length: 4,
-              characters: digits
-            })}`;
-          }
           const hashedPassword = await bcrypt.hash(generatedPassword, 10);
           const createdUser = await User.create({
-            username,
             email,
             password: hashedPassword,
             userType: userTypes.CUSTOMER_USER,
