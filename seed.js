@@ -7,7 +7,8 @@ const {
   VehicleType,
   Booking,
   BookedEquipment,
-  Equipment
+  Equipment,
+  Document
 } = require('./models');
 const sequelize = require('./util/database');
 const vehicles = require('./data/vehicles');
@@ -28,6 +29,8 @@ Booking.belongsToMany(Equipment, {
   through: BookedEquipment,
   foreignKey: 'booking'
 });
+Document.belongsTo(User);
+User.hasMany(Document);
 
 const seedVehicles = () => {
   return VehicleType.bulkCreate(vehicles, { include: [Vehicle] });

@@ -4,6 +4,7 @@ const VehicleType = require('./vehicleType');
 const Booking = require('./booking');
 const Equipment = require('./equipment');
 const BookedEquipment = require('./bookedEquipment');
+const Document = require('./document');
 
 module.exports = {
   User,
@@ -11,5 +12,6 @@ module.exports = {
   VehicleType,
   Booking,
   Equipment,
-  BookedEquipment
+  BookedEquipment,
+  Document
 };
