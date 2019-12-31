@@ -14,4 +14,16 @@ router.post(
   userController.add_document
 );
 
+router.get(
+  '/user-profile',
+  passport.authenticate('jwt', { session: false }),
+  userController.get_user
+);
+
+router.get(
+  '/user-documents',
+  passport.authenticate('jwt', { session: false }),
+  userController.get_documents
+);
+
 module.exports = router;
