@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const wrap = require('../error/wrap');
 const bookingController = require('../controllers/bookings');
 const passportConfig = require('../passport');
 
@@ -9,9 +10,9 @@ const router = express.Router();
 router.post(
   '/create-booking',
   passport.authenticate('jwt', { session: false }),
-  bookingController.create_booking
+  wrap(bookingController.create_booking)
 );
 
-router.get('/equipment', bookingController.get_equipment);
+router.get('/equipment', wrap(bookingController.get_equipment));
 
 module.exports = router;

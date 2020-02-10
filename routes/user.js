@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const wrap = require('../error/wrap');
 const upload = require('../util/upload');
 const userController = require('../controllers/user');
 const passportConfig = require('../passport');
@@ -11,19 +12,19 @@ router.post(
   '/upload-document',
   passport.authenticate('jwt', { session: false }),
   upload.single('document'),
-  userController.add_document
+  wrap(userController.add_document)
 );
 
 router.get(
   '/user-profile',
   passport.authenticate('jwt', { session: false }),
-  userController.get_user
+  wrap(userController.get_user)
 );
 
 router.get(
   '/user-documents',
   passport.authenticate('jwt', { session: false }),
-  userController.get_documents
+  wrap(userController.get_documents)
 );
 
 module.exports = router;
