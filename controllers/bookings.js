@@ -75,7 +75,7 @@ const get_equipment = async (req, res, next) => {
   res.status(200).json(equipment);
 };
 
-const extend__booking = async (req, res, next) => {
+const extend_booking = async (req, res, next) => {
   const { bookingId, returnDate } = req.body;
   const foundBooking = await Booking.findByPk(bookingId);
   if (!foundBooking) {
@@ -138,5 +138,5 @@ const extend__booking = async (req, res, next) => {
 module.exports = {
   create_booking,
   get_equipment,
-  extend__booking
+  extend_booking
 };

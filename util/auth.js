@@ -13,7 +13,7 @@ const generateJwToken = ({ id, userType }) => {
     },
     JWT_KEY,
     {
-      expiresIn: '1h'
+      expiresIn: '1y'
     }
   );
 };
@@ -22,9 +22,7 @@ const generateAuthRedirectUrl = (jwToken, userType) =>
   `${CLIENT_BASE_URL}authRedirect?token=${jwToken}&expiresIn=3600&type=${userType}`;
 
 const generateAuthCallbackUrl = authType =>
-  `http://${APP_HOST}:${PORT}/api/auth/${
-    authType === authTypes.GOOGLE_AUTH ? 'google' : 'facebook'
-  }/callback`;
+  `http://${APP_HOST}:${PORT}/api/auth/${authType === authTypes.GOOGLE_AUTH ? 'google' : 'facebook'}/callback`;
 
 const sendSignupMailWithPassword = (email, generatedPassword) => {
   sendgridMail

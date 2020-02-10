@@ -6,10 +6,13 @@ const sendgridMail = require('@sendgrid/mail');
 
 const { userTypes } = require('./constants/authTypes');
 const sequelize = require('./util/database');
+
 const authRoutes = require('./routes/auth');
 const vehicleRoutes = require('./routes/vehicles');
 const bookingRoutes = require('./routes/bookings');
 const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
+
 const { User, Vehicle, VehicleType, Booking, Equipment, BookedEquipment, Document } = require('./models');
 const cors = require('./util/cors');
 
@@ -45,6 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
