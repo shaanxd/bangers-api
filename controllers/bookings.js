@@ -1,13 +1,7 @@
 const Sequelize = require('sequelize');
 
 const CustomError = require('../error/error');
-const {
-  Booking,
-  Vehicle,
-  User,
-  Equipment,
-  BookedEquipment
-} = require('../models');
+const { Booking, Vehicle, User, Equipment, BookedEquipment } = require('../models');
 
 const create_booking = async (req, res, next) => {
   const {
@@ -58,10 +52,7 @@ const create_booking = async (req, res, next) => {
     ]
   });
   if (equipmentBooked.length > 0) {
-    throw new CustomError(
-      400,
-      `${equipmentBooked[0].equipment[0].name} is unavailable on selected date.`
-    );
+    throw new CustomError(400, `${equipmentBooked[0].equipment[0].name} is unavailable on selected date.`);
   }
   const booking = await Booking.create({
     startDate,
@@ -84,7 +75,68 @@ const get_equipment = async (req, res, next) => {
   res.status(200).json(equipment);
 };
 
+const extend__booking = async (req, res, next) => {
+  const { bookingId, returnDate } = req.body;
+  const foundBooking = await Booking.findByPk(bookingId);
+  if (!foundBooking) {
+    throw new CustomError(404, 'Booking not found.');
+  }
+  const existingCount = await Booking.count({
+    where: {
+      [Sequelize.Op.and]: {
+        startDate: {
+          [Sequelize.Op.lte]: new Date(returnDate)
+        },
+        returnDate: {
+          [Sequelize.Op.gte]: new Date(foundBooking.startDate)
+        },
+        vehicleId: foundBooking.vehicleId
+      }
+    }
+  });
+  if (existingCount > 1) {
+    throw new CustomError(404, 'Vehicle is already booked for specified date and time.');
+  }
+  const existingEquipment = await foundBooking.getEquipment();
+  if (existingEquipment.length > 0) {
+    let equipmentIdArray = [];
+    existingEquipment.forEach(equipment => {
+      equipmentIdArray.push(equipment.id);
+    });
+    const equipmentCount = await Booking.count({
+      where: {
+        [Sequelize.Op.and]: {
+          startDate: {
+            [Sequelize.Op.lte]: new Date(returnDate)
+          },
+          returnDate: {
+            [Sequelize.Op.gte]: new Date(foundBooking.startDate)
+          }
+        }
+      },
+      include: [
+        {
+          model: Equipment,
+          where: {
+            id: equipmentIdArray
+          }
+        }
+      ]
+    });
+    if (equipmentCount !== existingEquipment.length) {
+      throw new CustomError(400, 'Selected item have already been booked for specified date and time.');
+    }
+    await foundBooking.update({
+      returnDate
+    });
+    res.status(200).json({
+      message: 'Booking extended successfully!'
+    });
+  }
+};
+
 module.exports = {
   create_booking,
-  get_equipment
+  get_equipment,
+  extend__booking
 };

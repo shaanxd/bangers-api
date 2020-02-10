@@ -15,16 +15,8 @@ router.post(
   wrap(userController.add_document)
 );
 
-router.get(
-  '/user-profile',
-  passport.authenticate('jwt', { session: false }),
-  wrap(userController.get_user)
-);
+router.get('/user-profile', passport.authenticate('jwt', { session: false }), wrap(userController.get_user));
 
-router.get(
-  '/user-documents',
-  passport.authenticate('jwt', { session: false }),
-  wrap(userController.get_documents)
-);
+router.get('/user-documents', passport.authenticate('jwt', { session: false }), wrap(userController.get_documents));
 
 module.exports = router;

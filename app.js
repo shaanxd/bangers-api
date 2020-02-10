@@ -10,15 +10,7 @@ const authRoutes = require('./routes/auth');
 const vehicleRoutes = require('./routes/vehicles');
 const bookingRoutes = require('./routes/bookings');
 const userRoutes = require('./routes/user');
-const {
-  User,
-  Vehicle,
-  VehicleType,
-  Booking,
-  Equipment,
-  BookedEquipment,
-  Document
-} = require('./models');
+const { User, Vehicle, VehicleType, Booking, Equipment, BookedEquipment, Document } = require('./models');
 const cors = require('./util/cors');
 
 const port = process.env.PORT || 3000;
@@ -64,9 +56,7 @@ sequelize
   .sync()
   .then(result => {
     app.listen(port, () => {
-      console.log(
-        `Connection to database successful. Server is listening at port ${port}`
-      );
+      console.log(`Connection to database successful. Server is listening at port ${port}`);
     });
   })
   .catch(err => {

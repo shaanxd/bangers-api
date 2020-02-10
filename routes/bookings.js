@@ -15,4 +15,10 @@ router.post(
 
 router.get('/equipment', wrap(bookingController.get_equipment));
 
+router.post(
+  '/extend-booking',
+  passport.authenticate('jwt', { session: false }),
+  wrap(bookingController.extend__booking)
+);
+
 module.exports = router;

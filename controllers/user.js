@@ -22,10 +22,7 @@ const add_document = async (req, res, next) => {
     }
   });
   if (document) {
-    throw new CustomError(
-      400,
-      'You have already added the selected document type.'
-    );
+    throw new CustomError(400, 'You have already added the selected document type.');
   }
   const img = `/images/documents/${filename}`;
   const createdDocument = await Document.create({
@@ -50,15 +47,7 @@ const get_user = async (req, res, next) => {
   } = req;
   const foundUser = await User.findByPk(userId, {
     attributes: {
-      exclude: [
-        'createdAt',
-        'updatedAt',
-        'facebookProvider',
-        'googleProvider',
-        'userType',
-        'password',
-        'isBlackListed'
-      ]
+      exclude: ['createdAt', 'updatedAt', 'facebookProvider', 'googleProvider', 'userType', 'password', 'isBlackListed']
     }
   });
   if (!foundUser) {
