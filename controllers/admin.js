@@ -1,9 +1,34 @@
-const { User, Booking } = require('../models');
+const { User, Booking, Equipment, Vehicle } = require('../models');
 const { userTypes } = require('../constants/authTypes');
+const { bookingStatus } = require('../constants/bookingTypes');
 const CustomError = require('../error/error');
 
 const get_bookings = async (req, res, next) => {
-  const bookings = await Booking.findAll();
+  const bookings = await Booking.findAll({
+    attributes: {
+      exclude: ['createdAt', 'updatedAt']
+    },
+    include: [
+      {
+        model: Vehicle,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
+      },
+      {
+        model: User,
+        attributes: {
+          exclude: ['facebookProvider', 'googleProvider', 'createdAt', 'updatedAt', 'password', 'userType']
+        }
+      },
+      {
+        model: Equipment,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
+      }
+    ]
+  });
   res.status(200).json({
     bookings: [...bookings]
   });
@@ -43,11 +68,15 @@ const update_booking = async (req, res, next) => {
   if (!id || !status) {
     throw new CustomError(400, 'Bad Request');
   }
-  const booking = await User.findByPk(id);
+  const booking = await Booking.findByPk(id);
   if (!booking) {
     throw new CustomError(404, 'Booking not found.');
   }
   await booking.update({ bookingStatus: status });
+  const user = await booking.getUser();
+  if (status === bookingStatus.FAILED) {
+    await user.update({ isBlackListed: true });
+  }
   res.status(200).json({
     message: 'Booking updated successfully!'
   });

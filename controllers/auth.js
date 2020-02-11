@@ -24,6 +24,9 @@ const login_user = async (req, res, next) => {
   if (!foundUser) {
     throw new CustomError(400, "User doesn't exist");
   }
+  if (foundUser.isBlackListed) {
+    throw new CustomError(400, 'User is blacklisted.');
+  }
   const isValid = await bcrypt.compare(password, foundUser.password);
   if (!isValid) {
     throw new CustomError(401, 'Invalid credentials. Please try again.');
