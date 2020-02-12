@@ -126,17 +126,30 @@ const extend_booking = async (req, res, next) => {
     if (equipmentCount !== existingEquipment.length) {
       throw new CustomError(400, 'Selected item have already been booked for specified date and time.');
     }
-    await foundBooking.update({
-      returnDate
-    });
-    res.status(200).json({
-      message: 'Booking extended successfully!'
-    });
   }
+  await foundBooking.update({
+    returnDate
+  });
+  res.status(200).json({
+    message: 'Booking extended successfully!'
+  });
+};
+
+const get_bookings = async (req, res, next) => {
+  const {
+    user: { id }
+  } = req;
+  const bookings = await Booking.findAll({
+    where: { userId: id },
+    attributes: { exclude: ['userId', 'createdAt', 'updatedAt', 'vehicleId'] },
+    include: [{ model: Vehicle, attributes: { exclude: ['createdAt', 'updatedAt', 'vehicleTypeId'] } }]
+  });
+  res.status(200).json(bookings);
 };
 
 module.exports = {
   create_booking,
   get_equipment,
-  extend_booking
+  extend_booking,
+  get_bookings
 };
