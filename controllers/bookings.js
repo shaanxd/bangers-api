@@ -142,7 +142,10 @@ const get_bookings = async (req, res, next) => {
   const bookings = await Booking.findAll({
     where: { userId: id },
     attributes: { exclude: ['userId', 'createdAt', 'updatedAt', 'vehicleId'] },
-    include: [{ model: Vehicle, attributes: { exclude: ['createdAt', 'updatedAt', 'vehicleTypeId'] } }]
+    include: [
+      { model: Vehicle, attributes: { exclude: ['createdAt', 'updatedAt', 'vehicleTypeId'] } },
+      { model: Equipment, attributes: { exclude: ['createdAt', 'updatedAt'] } }
+    ]
   });
   res.status(200).json(bookings);
 };
