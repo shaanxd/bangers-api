@@ -3,9 +3,14 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const sendgridMail = require('@sendgrid/mail');
+const cron = require('node-cron');
 
 const { userTypes } = require('./constants/authTypes');
 const sequelize = require('./util/database');
+const insurance = require('./util/insurance');
+
+const { readCsvFromServer } = require('./jobs/csv');
+const { scrapeContentFromWebsite } = require('./jobs/scrape');
 
 const authRoutes = require('./routes/auth');
 const vehicleRoutes = require('./routes/vehicles');
@@ -13,7 +18,16 @@ const bookingRoutes = require('./routes/bookings');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 
-const { User, Vehicle, VehicleType, Booking, Equipment, BookedEquipment, Document } = require('./models');
+const {
+  User,
+  Vehicle,
+  VehicleType,
+  Booking,
+  Equipment,
+  BookedEquipment,
+  Document,
+  ExternalVehicle,
+} = require('./models');
 const cors = require('./util/cors');
 
 const port = process.env.PORT || 3000;
@@ -28,18 +42,18 @@ app.use(bodyParser.json());
 app.use(cors);
 
 VehicleType.hasMany(Vehicle, {
-  foreignKey: { name: 'vehicleTypeId', field: 'type' }
+  foreignKey: { name: 'vehicleTypeId', field: 'type' },
 });
 Vehicle.belongsTo(VehicleType);
 Booking.belongsTo(Vehicle);
 Booking.belongsTo(User);
 Equipment.belongsToMany(Booking, {
   through: BookedEquipment,
-  foreignKey: 'equipment'
+  foreignKey: 'equipment',
 });
 Booking.belongsToMany(Equipment, {
   through: BookedEquipment,
-  foreignKey: 'booking'
+  foreignKey: 'booking',
 });
 Document.belongsTo(User);
 User.hasMany(Document);
@@ -52,17 +66,26 @@ app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
-    message: err.message || 'Internal server error'
+    message: err.message || 'Internal server error',
   });
 });
 
+cron.schedule('0 0 * * *', readCsvFromServer);
+cron.schedule('0 0 * * *', scrapeContentFromWebsite);
+
 sequelize
   .sync()
-  .then(result => {
+  .then(() => {
+    return insurance.authenticate();
+  })
+  .then(() => {
     app.listen(port, () => {
       console.log(`Connection to database successful. Server is listening at port ${port}`);
     });
   })
-  .catch(err => {
-    console.log(err.message);
+  .catch((err) => {
+    console.log(
+      `[ERROR]: Failed to connect to database. Please make sure to have a working connection and try again.`,
+      err.message
+    );
   });
