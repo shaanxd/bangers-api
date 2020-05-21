@@ -1,5 +1,8 @@
 const insurance = require('../util/insurance');
-const { QueryTypes } = require('sequelize');
+const {
+  QueryTypes,
+  Op: { like },
+} = require('sequelize');
 
 const { User, Booking, Equipment, Vehicle } = require('../models');
 const { userTypes } = require('../constants/authTypes');
@@ -101,9 +104,38 @@ const update_booking = async (req, res, next) => {
   });
 };
 
+const add_equipment = async (req, res, next) => {
+  const { name } = req.body;
+
+  if (!name) {
+    throw new CustomError(400, 'Bad Request');
+  }
+
+  const equipment = await Equipment.findAll({
+    where: {
+      name: {
+        [like]: name,
+      },
+    },
+  });
+
+  if (equipment.length > 0) {
+    throw new CustomError(400, 'Equipment with given name already exists.');
+  }
+
+  await Equipment.create({
+    name,
+  });
+
+  res.status(200).json({
+    message: 'Equipment added successfully!',
+  });
+};
+
 module.exports = {
   get_users,
   get_bookings,
   disable_user,
   update_booking,
+  add_equipment,
 };

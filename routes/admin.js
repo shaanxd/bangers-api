@@ -36,4 +36,11 @@ router.post(
   wrap(adminController.update_booking)
 );
 
+router.post(
+  '/add-equipment',
+  passport.authenticate('jwt', { session: false }),
+  checkAuth.check_admin,
+  wrap(adminController.add_equipment)
+);
+
 module.exports = router;
