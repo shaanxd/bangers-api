@@ -19,9 +19,9 @@ const scrapeContentFromWebsite = async () => {
         return;
       }
       const name = $($(children[0])).text();
-      const ratePerMonth = parseFloat($($(children[1])).text());
-      const ratePerWeek = parseFloat($($(children[2])).text());
-      const over80Km = parseFloat($($(children[3])).text());
+      const ratePerMonth = parseFloat($($(children[1])).text().replace(',', ''));
+      const ratePerWeek = parseFloat($($(children[2])).text().replace(',', ''));
+      const over80Km = parseFloat($($(children[3])).text().replace(',', ''));
 
       vehicleList.push({ name, ratePerMonth, ratePerWeek, over80Km });
     });

@@ -8,18 +8,18 @@ const { generateJwToken, generateAuthRedirectUrl } = require('../util/auth');
 
 const login_user = async (req, res, next) => {
   const {
-    body: { email, password }
+    body: { email, password },
   } = req;
   if (!email || !password) {
     throw new CustomError(400, 'Bad Request');
   }
   const foundUser = await User.findOne({
     where: {
-      email
+      email,
     },
     attributes: {
-      exclude: ['createdAt', 'updatedAt', 'isBlackedListed']
-    }
+      exclude: ['createdAt', 'updatedAt', 'isBlackedListed'],
+    },
   });
   if (!foundUser) {
     throw new CustomError(400, "User doesn't exist");
@@ -35,24 +35,32 @@ const login_user = async (req, res, next) => {
   res.status(200).json({
     authToken: jwToken,
     expiresInSeconds: 3600,
-    userType: foundUser.userType
+    userType: foundUser.userType,
   });
 };
 
 const signup_user = async (req, res, next) => {
   const {
-    body: { password, email, firstname, lastname }
+    body: { password, email, firstname, lastname, license },
   } = req;
-  if (!email || !password || !firstname || !lastname) {
+  if (!email || !password || !firstname || !lastname || !license) {
     throw new CustomError(400, 'Bad Request');
   }
   const foundUser = await User.findOne({
     where: {
-      email
-    }
+      email,
+    },
   });
   if (foundUser) {
     throw new CustomError(400, 'User with given email exists already.');
+  }
+  const foundUserWithLicense = await User.findOne({
+    where: {
+      license,
+    },
+  });
+  if (foundUserWithLicense) {
+    throw new CustomError(400, 'User with given license exists already.');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const createdUser = await User.create({
@@ -60,13 +68,14 @@ const signup_user = async (req, res, next) => {
     password: hashedPassword,
     userType: userTypes.CUSTOMER_USER,
     firstname,
-    lastname
+    lastname,
+    license,
   });
   const jwToken = generateJwToken(createdUser);
   res.status(200).json({
     authToken: jwToken,
     expiresInSeconds: 3600,
-    userType: createdUser.userType
+    userType: createdUser.userType,
   });
 };
 
@@ -88,5 +97,5 @@ module.exports = {
   login_user,
   signup_user,
   auth_google,
-  auth_facebook
+  auth_facebook,
 };

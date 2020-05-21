@@ -9,6 +9,8 @@ router.get('/', wrap(vehiclesController.get_vehicles));
 
 router.get('/vehicle-types', wrap(vehiclesController.get_vehicle_types));
 
+router.get('/vehicle-comparisons', wrap(vehiclesController.get_vehicle_comparisons));
+
 router.get('/:id', wrap(vehiclesController.get_vehicle));
 
 module.exports = router;

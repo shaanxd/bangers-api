@@ -6,40 +6,44 @@ const User = sequelize.define('user', {
   id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   firstname: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   lastname: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,
     isEmail: true,
     allowNull: false,
-    unique: true
+    unique: true,
+  },
+  license: {
+    type: Sequelize.STRING,
+    unique: true,
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   isBlackListed: {
     type: Sequelize.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
   },
   userType: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   googleProvider: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   facebookProvider: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = User;

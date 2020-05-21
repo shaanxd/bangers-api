@@ -27,6 +27,7 @@ const {
   BookedEquipment,
   Document,
   ExternalVehicle,
+  License,
 } = require('./models');
 const cors = require('./util/cors');
 

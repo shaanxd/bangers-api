@@ -12,16 +12,16 @@ const ExternalVehicle = sequelize.define('externalVehicle', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  ratePerDay: {
-    type: Sequelize.DOUBLE,
+  ratePerMonth: {
+    type: Sequelize.DECIMAL(10, 2),
     defaultValue: 0.0,
   },
   ratePerWeek: {
-    type: Sequelize.DOUBLE,
+    type: Sequelize.DECIMAL(10, 2),
     defaultValue: 0.0,
   },
   over80Km: {
-    type: Sequelize.DOUBLE,
+    type: Sequelize.DECIMAL(10, 2),
     defaultValue: 0.0,
   },
 });
