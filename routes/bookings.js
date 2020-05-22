@@ -23,4 +23,6 @@ router.post(
 
 router.get('/get-bookings', passport.authenticate('jwt', { session: false }), wrap(bookingController.get_bookings));
 
+router.post('/add-equipment', passport.authenticate('jwt', { session: false }), wrap(bookingController.add_equipment));
+
 module.exports = router;
