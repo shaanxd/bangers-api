@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 
 const CustomError = require('../error/error');
-const { Booking, Vehicle, User, Equipment, BookedEquipment } = require('../models');
+const { Booking, Vehicle, User, Equipment, BookedEquipment, VehicleType, Document } = require('../models');
+const { calculateTotalPrice, getDifferenceInHours, getDifferenceInWeeks } = require('../util/booking');
 
 const create_booking = async (req, res, next) => {
   const {
@@ -11,10 +12,35 @@ const create_booking = async (req, res, next) => {
   if (!startDate || !returnDate || !vehicleId) {
     throw new CustomError(400, 'Bad Request');
   }
-  const vehicle = await Vehicle.findByPk(vehicleId);
+  const vehicle = await Vehicle.findOne({
+    where: {
+      id: vehicleId,
+    },
+    include: [{ model: VehicleType }],
+  });
   if (!vehicle) {
     throw new CustomError(404, 'Vehicle not found.');
   }
+  const userDocuments = await Document.findAll({
+    where: {
+      userId,
+    },
+  });
+
+  if (userDocuments.length !== 2) {
+    throw new CustomError(
+      400,
+      'You have not uploaded the required documents. Please upload the required documents and try again.'
+    );
+  }
+
+  if (getDifferenceInHours(startDate, returnDate) < 5) {
+    throw new CustomError(400, 'Cannot book vehicles for less than 5 hours.');
+  }
+  if (getDifferenceInWeeks(startDate, returnDate) > 2) {
+    throw new CustomError(400, 'Cannot book vehicles for more than two weeks.');
+  }
+
   const foundBooking = await Booking.findAll({
     where: {
       [Sequelize.Op.and]: {
@@ -54,13 +80,21 @@ const create_booking = async (req, res, next) => {
   if (equipmentBooked.length > 0) {
     throw new CustomError(400, `${equipmentBooked[0].equipment[0].name} is unavailable on selected date.`);
   }
+
+  const {
+    vehicleType: { pricePerDay },
+  } = vehicle;
+
+  const totalPrice = calculateTotalPrice(startDate, returnDate, pricePerDay);
+
   const booking = await Booking.create({
     startDate,
     returnDate,
     userId,
     vehicleId,
+    totalPrice,
   });
-  const bookedEquipments = await booking.addEquipment(equipment);
+  await booking.addEquipment(equipment);
   res.status(200).json({
     message: 'Vehicle booked successfully.',
   });

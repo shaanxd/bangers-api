@@ -5,6 +5,7 @@ const wrap = require('../error/wrap');
 const passportConfig = require('../passport');
 const adminController = require('../controllers/admin');
 const checkAuth = require('../middleware/auth');
+const upload = require('../util/upload');
 
 const router = express.Router();
 
@@ -30,6 +31,13 @@ router.post(
 );
 
 router.post(
+  '/enable-user/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkAuth.check_admin,
+  wrap(adminController.enable_user)
+);
+
+router.post(
   '/update-booking',
   passport.authenticate('jwt', { session: false }),
   checkAuth.check_admin,
@@ -41,6 +49,24 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   checkAuth.check_admin,
   wrap(adminController.add_equipment)
+);
+
+router.post(
+  '/add-vehicle-type',
+  passport.authenticate('jwt', { session: false }),
+  checkAuth.check_admin,
+  wrap(adminController.add_vehicle_type)
+);
+
+router.post(
+  '/add-vehicle',
+  passport.authenticate('jwt', { session: false }),
+  checkAuth.check_admin,
+  upload('vehicles').fields([
+    { name: 'defaultImage', maxCount: 1 },
+    { name: 'images', maxCount: 8 },
+  ]),
+  wrap(adminController.add_vehicle)
 );
 
 module.exports = router;

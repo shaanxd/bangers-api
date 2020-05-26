@@ -79,14 +79,14 @@ const signup_user = async (req, res, next) => {
   });
 };
 
-const auth_google = (req, res, next) => {
+const auth_google = async (req, res, next) => {
   const { user } = req;
   const jwToken = generateJwToken(user);
   const redirectUrl = generateAuthRedirectUrl(jwToken, user.userType);
   res.redirect(redirectUrl);
 };
 
-const auth_facebook = (req, res, next) => {
+const auth_facebook = async (req, res, next) => {
   const { user } = req;
   const jwToken = generateJwToken(user);
   const redirectUrl = generateAuthRedirectUrl(jwToken, user.userType);

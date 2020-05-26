@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   '/upload-document',
   passport.authenticate('jwt', { session: false }),
-  upload.single('document'),
+  upload('documents').single('document'),
   wrap(userController.add_document)
 );
 

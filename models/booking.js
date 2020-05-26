@@ -7,21 +7,25 @@ const Booking = sequelize.define('booking', {
   id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   startDate: {
     type: Sequelize.DATE,
-    allowNull: false
+    allowNull: false,
   },
   returnDate: {
     type: Sequelize.DATE,
-    allowNull: false
+    allowNull: false,
   },
   bookingStatus: {
     type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: bookingStatus.BOOKED
-  }
+    defaultValue: bookingStatus.BOOKED,
+  },
+  totalPrice: {
+    type: Sequelize.DECIMAL(10, 2),
+    defaultValue: 0.0,
+  },
 });
 
 module.exports = Booking;
