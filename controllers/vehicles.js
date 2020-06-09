@@ -72,6 +72,13 @@ const get_vehicle_comparisons = async (req, res, next) => {
     ],
   });
 
+  if (externalVehicles.length == 0) {
+    throw new CustomError(
+      400,
+      'Error occured while retrieving external vehicle data. Please try again tomorrow at 12 AM'
+    );
+  }
+
   res.status(200).json({
     external: [...externalVehicles],
     internal: [...bangersVehicles],

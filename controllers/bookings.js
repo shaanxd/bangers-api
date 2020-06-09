@@ -1,12 +1,15 @@
 const Sequelize = require('sequelize');
 
 const CustomError = require('../error/error');
-const { Booking, Vehicle, User, Equipment, BookedEquipment, VehicleType, Document } = require('../models');
+
+const { documentTypes } = require('../constants/documentTypes');
+const { sendDmvMail } = require('../util/mail');
+const { Booking, Vehicle, User, Equipment, BookedEquipment, VehicleType, Document, License } = require('../models');
 const { calculateTotalPrice, getDifferenceInHours, getDifferenceInWeeks } = require('../util/booking');
 
 const create_booking = async (req, res, next) => {
   const {
-    user: { id: userId },
+    user: { id: userId, license },
     body: { startDate, returnDate, vehicleId, equipment },
   } = req;
   if (!startDate || !returnDate || !vehicleId) {
@@ -26,12 +29,24 @@ const create_booking = async (req, res, next) => {
       userId,
     },
   });
-
   if (userDocuments.length !== 2) {
     throw new CustomError(
       400,
       'You have not uploaded the required documents. Please upload the required documents and try again.'
     );
+  }
+  const isMissing = await License.findOne({
+    where: {
+      license,
+    },
+  });
+  if (isMissing) {
+    const userLicenseImage = userDocuments.filter((doc) => doc.type === documentTypes.DRIVING_LICENSE);
+    if (userLicenseImage.length > 0) {
+      sendDmvMail(license, userLicenseImage[0].img);
+    }
+
+    throw new CustomError(400, 'Your license has been reported as missing.');
   }
 
   if (getDifferenceInHours(startDate, returnDate) < 5) {

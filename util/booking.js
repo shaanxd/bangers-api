@@ -28,3 +28,7 @@ exports.getDifferenceInHours = (startDate, endDate) => {
 exports.getDifferenceInWeeks = (startDate, endDate) => {
   return moment.duration(moment(endDate).diff(moment(startDate))).asWeeks();
 };
+
+exports.getDifferenceInMonths = (date) => {
+  return moment.duration(moment().diff(moment(date))).asMonths();
+};

@@ -6,16 +6,20 @@ const Document = sequelize.define('document', {
   id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   type: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   img: {
     type: Sequelize.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
+  issuedDate: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
 });
 
 module.exports = Document;

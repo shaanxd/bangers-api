@@ -4,6 +4,7 @@ const {
   Op: { like },
 } = require('sequelize');
 
+const { getDifferenceInMonths } = require('../util/booking');
 const { User, Booking, Equipment, Vehicle, VehicleType } = require('../models');
 const { userTypes } = require('../constants/authTypes');
 const { bookingStatus } = require('../constants/bookingTypes');
@@ -106,6 +107,19 @@ const update_booking = async (req, res, next) => {
 
   if (licenseList.length > 0) {
     newStatus = bookingStatus.FAILED;
+  }
+
+  if (newStatus === bookingStatus.COLLECTED) {
+    const documents = await user.getDocuments();
+    for (const document of documents) {
+      const diff = getDifferenceInMonths(document.issuedDate);
+      if (diff > 3) {
+        throw new CustomError(
+          400,
+          'One of the user documents are older than 3 months. Please contact the user and get renewed documents.'
+        );
+      }
+    }
   }
 
   await booking.update({ bookingStatus: newStatus });

@@ -3,52 +3,64 @@ const { Op } = require('sequelize');
 const CustomError = require('../error/error');
 const { Document, User } = require('../models');
 const {
-  documentTypes: { DRIVING_LICENSE, OTHER_DOCUMENTS }
+  documentTypes: { DRIVING_LICENSE, OTHER_DOCUMENTS },
 } = require('../constants/documentTypes');
 
 const add_document = async (req, res, next) => {
   const {
     user: { id: userId },
     file: { filename },
-    body: { type }
+    body: { type, issuedDate },
   } = req;
   if (!type || (type !== DRIVING_LICENSE && type !== OTHER_DOCUMENTS)) {
     throw new CustomError(400, 'Invalid document type.');
   }
+  if (!issuedDate) {
+    throw new CustomError(400, 'Please select an issued date');
+  }
   const document = await Document.findOne({
     where: {
       userId,
-      type: type
-    }
+      type: type,
+    },
   });
   if (document) {
-    throw new CustomError(400, 'You have already added the selected document type.');
+    await document.destroy();
   }
   const img = `/images/documents/${filename}`;
-  const createdDocument = await Document.create({
+  await Document.create({
     userId,
     type,
-    img
+    img,
+    issuedDate,
   });
   const allDocuments = await Document.findAll({
     where: {
-      userId
+      userId,
     },
     attributes: {
-      exclude: ['createdAt', 'updatedAt', 'userId']
-    }
+      exclude: ['createdAt', 'updatedAt', 'userId'],
+    },
   });
   res.status(200).json(allDocuments);
 };
 
 const get_user = async (req, res, next) => {
   const {
-    user: { id: userId }
+    user: { id: userId },
   } = req;
   const foundUser = await User.findByPk(userId, {
     attributes: {
-      exclude: ['createdAt', 'updatedAt', 'facebookProvider', 'googleProvider', 'userType', 'password', 'isBlackListed']
-    }
+      exclude: [
+        'createdAt',
+        'updatedAt',
+        'facebookProvider',
+        'googleProvider',
+        'userType',
+        'password',
+        'isBlackListed',
+      ],
+    },
   });
   if (!foundUser) {
     throw new CustomError(400, 'User not found.');
@@ -58,11 +70,11 @@ const get_user = async (req, res, next) => {
 
 const get_documents = async (req, res, next) => {
   const {
-    user: { id: userId }
+    user: { id: userId },
   } = req;
   const userDoc = await Document.findAll({
     where: { userId },
-    attributes: { exclude: ['createdAt', 'updatedAt', 'userId'] }
+    attributes: { exclude: ['createdAt', 'updatedAt', 'userId'] },
   });
   res.status(200).json(userDoc);
 };
@@ -70,5 +82,5 @@ const get_documents = async (req, res, next) => {
 module.exports = {
   add_document,
   get_user,
-  get_documents
+  get_documents,
 };
